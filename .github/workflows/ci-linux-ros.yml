@@ -1,6 +1,6 @@
 name: CI - Linux - ROS
 on:
-  push:
+  # push:
   pull_request:
     paths-ignore:
       - CHANGELOG.md

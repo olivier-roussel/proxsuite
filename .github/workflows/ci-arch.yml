@@ -1,7 +1,7 @@
 name: CI - ArchLinux
 
 on:
-  push:
+  # push:
   pull_request:
     paths-ignore:
       - CHANGELOG.md
