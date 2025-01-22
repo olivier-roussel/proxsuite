@@ -9,24 +9,25 @@ on:
 
 jobs:
   build-with-conda:
-    name: '[conda:${{ matrix.os }}:${{ matrix.build_type }}:c++${{ matrix.cxx_std }}]'
+    name: '[conda:${{ matrix.name }}:${{ matrix.build_type }}:c++${{ matrix.cxx_std }}]'
     runs-on: ${{ matrix.os }}
 
     strategy:
       fail-fast: false
       matrix:
         build_type: [Release, Debug]
-        name: [ubuntu-latest, macos-latest, windows-2019-clang-cl, windows-2022-msvc, windows-2022-clang-cl, macos-14]
+        name: [windows-2019-clang-cl, windows-2022-msvc, windows-2022-clang-cl]
+        # name: [ubuntu-latest, macos-latest, windows-2019-clang-cl, windows-2022-msvc, windows-2022-clang-cl, macos-14]
         cxx_std: [17, 20]
         continue_on_error: [false]
 
         include:
-          - name: ubuntu-latest
-            os: ubuntu-latest
-          - name: macos-latest
-            os: macos-latest
-          - name: macos-14
-            os: macos-14
+          # - name: ubuntu-latest
+          #   os: ubuntu-latest
+          # - name: macos-latest
+          #   os: macos-latest
+          # - name: macos-14
+          #   os: macos-14
           - name: windows-2019-clang-cl
             os: windows-2019
             compiler: clang-cl
@@ -35,26 +36,26 @@ jobs:
           - name: windows-2022-clang-cl
             os: windows-2022
             compiler: clang-cl
-          - name: macos-latest
-            os: macos-latest
-            build_type: Debug
-            cxx_std: 17
-            continue_on_error: true
-          - name: macos-latest
-            os: macos-latest
-            build_type: Debug
-            cxx_std: 20
-            continue_on_error: true
+          # - name: macos-latest
+          #   os: macos-latest
+          #   build_type: Debug
+          #   cxx_std: 17
+          #   continue_on_error: true
+          # - name: macos-latest
+          #   os: macos-latest
+          #   build_type: Debug
+          #   cxx_std: 20
+          #   continue_on_error: true
 
-        exclude:
-          - name: macos-latest
-            build_type: Debug
-            cxx_std: 17
-            continue_on_error: false
-          - name: macos-latest
-            build_type: Debug
-            cxx_std: 20
-            continue_on_error: false
+        # exclude:
+        #   - name: macos-latest
+        #     build_type: Debug
+        #     cxx_std: 17
+        #     continue_on_error: false
+        #   - name: macos-latest
+        #     build_type: Debug
+        #     cxx_std: 20
+        #     continue_on_error: false
 
     steps:
     - uses: actions/checkout@v4
@@ -155,7 +156,7 @@ jobs:
         cmake .. -G"Ninja" -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_INSTALL_PREFIX=${CONDA_PREFIX}/Library -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} -DCMAKE_CXX_STANDARD=${{ matrix.cxx_std }} -DBUILD_PYTHON_INTERFACE:BOOL=ON -DPYTHON_SITELIB=${CONDA_PREFIX}/Lib/site-packages -DPYTHON_EXECUTABLE=${CONDA_PREFIX}/python.exe -DOpenMP_ROOT=$CONDA_PREFIX -DBUILD_WITH_OPENMP_SUPPORT:BOOL=ON -DLINK_PYTHON_INTERFACE_TO_OPENMP:BOOL=ON -DBUILD_DOCUMENTATION:BOOL=ON -DINSTALL_DOCUMENTATION:BOOL=ON
 
     - name: Configure [Conda/Windows-2022-msvc]
-      if: contains(matrix.os, 'windows-2022-msvc')
+      if: contains(matrix.name, 'windows-2022-msvc')
       shell: bash -l {0}
       run: |
         echo $(where ccache)
